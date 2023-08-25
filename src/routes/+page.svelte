@@ -1,18 +1,35 @@
 <script lang="ts">
-	import { getDoodads, soycat } from '$lib/utils';
+	import { getDoodads, replaceWithSoycat } from '$lib/utils';
+	import { onMount } from 'svelte';
+
+	const STORAGE_KEY_HIDEOUT = 'PUX_ORIGINAL_HIDEOUT';
+	const STORAGE_KEY_TIMESTAMP = 'PUX_UPLOAD_TIMESTAMP';
+	const STORAGE_KEY_CHOSEN_DOODAD = 'PUX_CHOSEN_DOODAD';
 
 	let errors: string[] = [];
 
 	let originalHideout = '';
 	let chosenDoodad = '';
+	let uploadedTimestamp = 0;
+
+	let adjustX = 0;
+	let adjustY = 0;
 
 	$: doodads = getDoodads(originalHideout);
 	$: uniqueDoodads = Object.entries(doodads).filter((a) => a[1] === 1);
 	$: duplicateDoodads = Object.entries(doodads).filter((a) => a[1] > 1);
-	$: regexString = `"${chosenDoodad}"\s?:\s*\{.+?\}`;
-	$: hideoutWithCat = originalHideout
-		.replaceAll(/\s+/g, ' ')
-		.replace(new RegExp(`"${chosenDoodad}"\\s?:\\s*\\{.+?\\}`), soycat);
+	$: hideoutWithCat = replaceWithSoycat(originalHideout, chosenDoodad, { x: adjustX, y: adjustY });
+	$: uploadedDate = new Date(uploadedTimestamp);
+
+	onMount(() => {
+		const savedHideout = localStorage.getItem(STORAGE_KEY_HIDEOUT);
+
+		if (savedHideout) {
+			originalHideout = savedHideout;
+			chosenDoodad = localStorage.getItem(STORAGE_KEY_CHOSEN_DOODAD) || '';
+			uploadedTimestamp = parseInt(localStorage.getItem(STORAGE_KEY_TIMESTAMP) || '0', 10);
+		}
+	});
 </script>
 
 <div class="max-w-[130ch] mx-auto">
@@ -40,8 +57,11 @@
 								for (const file of [...event.currentTarget.files]) {
 									try {
 										originalHideout = await file.text();
+										chosenDoodad = '';
 
-										console.log('originalHideout', originalHideout);
+										localStorage.setItem(STORAGE_KEY_HIDEOUT, originalHideout);
+										localStorage.setItem(STORAGE_KEY_CHOSEN_DOODAD, '');
+										localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString(10));
 									} catch (_e) {
 										errors.push(`Error when loading ${file.name}`);
 									}
@@ -51,10 +71,19 @@
 					/>
 				</label>
 			</div>
-
-			{#if uniqueDoodads.length === 0}
+			{#if !originalHideout}
 				<p>Please upload a hideout.</p>
+			{:else if uniqueDoodads.length === 0}
+				<p>
+					Please upload a different hideout. The uploaded hideout doesn't have any suitable
+					decorations to replace.
+				</p>
+				<p>
+					Add a decoration where you want the cat in-game, re-export, and re-upload your hideout.
+				</p>
 			{:else}
+				<h3 class="mt-1">Uploaded at {uploadedDate.toLocaleString()}</h3>
+				<p>Choose Decoration to Replace</p>
 				<div>
 					<ul class="inline-block">
 						{#each uniqueDoodads as doodad}
@@ -63,6 +92,9 @@
 									><input
 										type="radio"
 										bind:group={chosenDoodad}
+										on:click={() => {
+											localStorage.setItem(STORAGE_KEY_CHOSEN_DOODAD, doodad[0]);
+										}}
 										name="targetDoodad"
 										value={doodad[0]}
 									/>&nbsp;{doodad[0]}</label
@@ -71,15 +103,102 @@
 						{/each}
 					</ul>
 				</div>
-				{#if chosenDoodad}
-					<div>
-						<a
-							class="button-default no-underline opaque inline-block"
-							href={`data:text/plain;charset=utf-8,${hideoutWithCat}`}
-							download="with-cat.hideout">Download (Right-Click, Save As)</a
-						>
-					</div>
-				{/if}
+				<div>
+					<h3>Adjust</h3>
+					<table>
+						<tbody>
+							<tr>
+								<td
+									><button
+										class="p0 flex flex-row justify-center items-center w-7 h-7"
+										on:click={() => {
+											adjustY = adjustY + 1;
+										}}>↖️</button
+									></td
+								>
+								<td
+									><button class="p0 flex flex-row justify-center items-center w-7 h-7" disabled
+										>⬆️</button
+									></td
+								>
+								<td
+									><button
+										class="p0 flex flex-row justify-center items-center w-7 h-7"
+										on:click={() => {
+											adjustX = adjustX + 1;
+										}}>↗️</button
+									></td
+								>
+							</tr>
+							<tr>
+								<td
+									><button class="p0 flex flex-row justify-center items-center w-7 h-7" disabled
+										>⬅️</button
+									></td
+								>
+								<td
+									><button
+										class="p0 flex flex-row justify-center items-center w-7 h-7"
+										on:click={() => {
+											adjustX = 0;
+											adjustY = 0;
+										}}>🔄</button
+									></td
+								>
+								<td
+									><button class="p0 flex flex-row justify-center items-center w-7 h-7" disabled
+										>➡️</button
+									></td
+								>
+							</tr>
+							<tr>
+								<td
+									><button
+										class="p0 flex flex-row justify-center items-center w-7 h-7"
+										on:click={() => {
+											adjustX = adjustX - 1;
+										}}>↙️</button
+									></td
+								>
+								<td
+									><button class="p0 flex flex-row justify-center items-center w-7 h-7" disabled
+										>⬇️</button
+									></td
+								>
+								<td
+									><button
+										class="p0 flex flex-row justify-center items-center w-7 h-7"
+										on:click={() => {
+											adjustY = adjustY - 1;
+										}}>↘️</button
+									></td
+								>
+							</tr>
+						</tbody>
+					</table>
+					<table class="my-2">
+						<tbody>
+							<tr>
+								<td>X</td>
+								<td><input class="w-16 text-right" type="number" bind:value={adjustX} /></td>
+							</tr>
+							<tr>
+								<td>Y</td>
+								<td><input class="w-16 text-right" type="number" bind:value={adjustY} /></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			{/if}
+
+			{#if chosenDoodad && uniqueDoodads.length > 0}
+				<div>
+					<a
+						class="button-default no-underline opaque inline-block"
+						href={`data:text/plain;charset=utf-8,${hideoutWithCat}`}
+						download={`with-cat_x${adjustX}_y${adjustY}.hideout`}>Download (Right-Click, Save As)</a
+					>
+				</div>
 			{/if}
 			{#if duplicateDoodads.length > 0}
 				<details>
@@ -95,7 +214,6 @@
 				</details>
 			{/if}
 		</div>
-
 		<div class="basis-prose">
 			<h2>Instructions</h2>
 			<ol class="ml-4 list-decimal">
@@ -117,7 +235,11 @@
 					clicking on the arrow buttons.
 				</li>
 			</ol>
+			<h2>To Do</h2>
+			<ol class="ml-4 list-disc">
+				<li>Figure out what x and y to use when adjusting vertically/horizontally</li>
+				<li>Add any custom decoration</li>
+			</ol>
 		</div>
 	</div>
-	<div>{regexString}</div>
 </div>

@@ -52,7 +52,7 @@
 	}
 
 	p + p {
-		@apply mt-1.5;
+		@apply mt-0.5;
 	}
 
 	.odd-rows {
