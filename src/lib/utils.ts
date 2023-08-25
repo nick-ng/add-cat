@@ -1,8 +1,6 @@
 import { soycat, soycatCentre } from './hideouts/soycat';
 
 export const getDoodads = (hideout: string) => {
-	// const b = hideout.replaceAll(/\s+/g, ' ');
-
 	const doodads: { [key: string]: number } = {};
 
 	[...hideout.matchAll(/"([\w\s]+)":\s?\{/g)].forEach((match) => {

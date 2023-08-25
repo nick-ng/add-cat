@@ -58,10 +58,11 @@
 									try {
 										originalHideout = await file.text();
 										chosenDoodad = '';
+										uploadedTimestamp = Date.now();
 
 										localStorage.setItem(STORAGE_KEY_HIDEOUT, originalHideout);
 										localStorage.setItem(STORAGE_KEY_CHOSEN_DOODAD, '');
-										localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString(10));
+										localStorage.setItem(STORAGE_KEY_TIMESTAMP, uploadedTimestamp.toString(10));
 									} catch (_e) {
 										errors.push(`Error when loading ${file.name}`);
 									}
@@ -81,6 +82,25 @@
 				<p>
 					Add a decoration where you want the cat in-game, re-export, and re-upload your hideout.
 				</p>
+				{#if duplicateDoodads.length > 0}
+					<p>Your hideout only has these non-unique decorations:</p>
+					<table>
+						<thead>
+							<tr>
+								<th class="px-1 border-default text-left">Name</th>
+								<th class="px-1 border-default text-right">Count</th>
+							</tr>
+						</thead>
+						<tbody>
+							{#each duplicateDoodads as doodad}
+								<tr class="odd-rows">
+									<td class="px-1 border-default">{doodad[0]}</td>
+									<td class="px-1 border-default text-right">{doodad[1]}</td>
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+				{/if}
 			{:else}
 				<h3 class="mt-1">Uploaded at {uploadedDate.toLocaleString()}</h3>
 				<p>Choose Decoration to Replace</p>
@@ -102,6 +122,28 @@
 							</li>
 						{/each}
 					</ul>
+					{#if duplicateDoodads.length > 0}
+						<details>
+							<summary>Duplicate Decorations</summary>
+							<p>You can't choose these because there are multiple of them:</p>
+							<table>
+								<thead>
+									<tr>
+										<th class="px-1 border-default text-left">Name</th>
+										<th class="px-1 border-default text-right">Count</th>
+									</tr>
+								</thead>
+								<tbody>
+									{#each duplicateDoodads as doodad}
+										<tr class="odd-rows">
+											<td class="px-1 border-default">{doodad[0]}</td>
+											<td class="px-1 border-default text-right">{doodad[1]}</td>
+										</tr>
+									{/each}
+								</tbody>
+							</table>
+						</details>
+					{/if}
 				</div>
 				<div>
 					<h3>Adjust</h3>
@@ -199,19 +241,6 @@
 						download={`with-cat_x${adjustX}_y${adjustY}.hideout`}>Download (Right-Click, Save As)</a
 					>
 				</div>
-			{/if}
-			{#if duplicateDoodads.length > 0}
-				<details>
-					<summary>Duplicate Decorations</summary>
-					<p>You have multiple of each of these:</p>
-					<ul>
-						{#each duplicateDoodads as doodad}
-							<li class="even-rows">
-								{doodad[0]}: {doodad[1]}
-							</li>
-						{/each}
-					</ul>
-				</details>
 			{/if}
 		</div>
 		<div class="basis-prose">
