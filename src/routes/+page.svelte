@@ -5,6 +5,8 @@
 	const STORAGE_KEY_HIDEOUT = 'PUX_ORIGINAL_HIDEOUT';
 	const STORAGE_KEY_TIMESTAMP = 'PUX_UPLOAD_TIMESTAMP';
 	const STORAGE_KEY_CHOSEN_DOODAD = 'PUX_CHOSEN_DOODAD';
+	const STORAGE_KEY_ADJUST_X = 'PUX_ADJUST_X';
+	const STORAGE_KEY_ADJUST_Y = 'PUX_ADJUST_Y';
 
 	let errors: string[] = [];
 
@@ -28,6 +30,8 @@
 			originalHideout = savedHideout;
 			chosenDoodad = localStorage.getItem(STORAGE_KEY_CHOSEN_DOODAD) || '';
 			uploadedTimestamp = parseInt(localStorage.getItem(STORAGE_KEY_TIMESTAMP) || '0', 10);
+			adjustX = parseInt(localStorage.getItem(STORAGE_KEY_ADJUST_X) || '0', 10);
+			adjustY = parseInt(localStorage.getItem(STORAGE_KEY_ADJUST_Y) || '0', 10);
 		}
 	});
 </script>
@@ -59,10 +63,14 @@
 										originalHideout = await file.text();
 										chosenDoodad = '';
 										uploadedTimestamp = Date.now();
+										adjustX = 0;
+										adjustY = 0;
 
 										localStorage.setItem(STORAGE_KEY_HIDEOUT, originalHideout);
 										localStorage.setItem(STORAGE_KEY_CHOSEN_DOODAD, '');
 										localStorage.setItem(STORAGE_KEY_TIMESTAMP, uploadedTimestamp.toString(10));
+										localStorage.setItem(STORAGE_KEY_ADJUST_X, adjustX.toString(10));
+										localStorage.setItem(STORAGE_KEY_ADJUST_Y, adjustY.toString(10));
 									} catch (_e) {
 										errors.push(`Error when loading ${file.name}`);
 									}
@@ -255,13 +263,14 @@
 					Choose the decoration you added in step 1. This decoration will be replaced by a "soycat"
 				</li>
 				<li>
-					Download your new hideout by clicking on the "Download (Right-Click, Save As)" button. If
-					that doesn't work, you might have to right-click on the button and choose "Save As...".
-					Don't overwrite your original hideout in case the the you don't get what you want.
+					Download your new hideout. If that doesn't work, you might have to right-click on the
+					button and choose "Save As...". Don't overwrite your original hideout in case you don't
+					get what you want.
 				</li>
 				<li>
-					Import your new hideout. If the cat isn't in the correct position, you can move it by
-					clicking on the arrow buttons.
+					Import your new hideout in Path of Exile. If the cat isn't in the correct position, you
+					can move it by clicking on the adjustment buttons. You'll need to download and import your
+					hideout to see if the adjustments were enough.
 				</li>
 			</ol>
 			<h2>To Do</h2>
