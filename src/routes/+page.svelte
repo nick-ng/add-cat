@@ -273,11 +273,23 @@
 					hideout to see if the adjustments were enough.
 				</li>
 			</ol>
+			<h2>Notes</h2>
+			<ul class="ml-4 list-disc">
+				<li>
+					You can only add one cat at a time. To save time adding more than one:
+					<ol class="ml-4 list-decimal">
+						<li>Add multiple different decorations to your hideout</li>
+						<li>Upload and replace one of them with a cat</li>
+						<li>Upload the new hideout and replace the next one with a cat</li>
+					</ol>
+				</li>
+			</ul>
 			<h2>To Do</h2>
-			<ol class="ml-4 list-disc">
+			<ul class="ml-4 list-disc">
 				<li>Figure out what x and y to use when adjusting vertically/horizontally</li>
 				<li>Add any custom decoration</li>
-			</ol>
+				<li>Add multiple cats at once</li>
+			</ul>
 		</div>
 	</div>
 </div>
