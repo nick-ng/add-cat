@@ -1678,13 +1678,6 @@ export const soycat = `"Snow Drift": {
 	"r": 0,
 	"fv": 18
 },
-"Blue Light Beam": {
-	"hash": 3967691837,
-	"x": 361,
-	"y": 342,
-	"r": 0,
-	"fv": 0
-},
 "Volcanic Pebble": {
 	"hash": 4263551471,
 	"x": 325,
