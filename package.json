@@ -35,6 +35,6 @@
 	"type": "module",
 	"dependencies": {
 		"markdown-it": "^13.0.2",
-		"zod": "^3.21.4"
+		"zod": "^3.22.4"
 	}
 }
