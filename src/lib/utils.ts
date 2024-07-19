@@ -1,12 +1,15 @@
 import { soycat, soycatCentre } from './hideouts/soycat';
 
-export const getDoodads = (hideout: string) => {
+export const getDoodadCounts = (hideout: string, lax: boolean = false) => {
 	const doodads: { [key: string]: number } = {};
 
 	[...hideout.matchAll(/"([\w\s]+)":\s?\{/g)].forEach((match) => {
+		if (match[1] === 'doodads') {
+			return;
+		}
 		if (
+			!lax &&
 			[
-				'doodads',
 				'Stash',
 				'Guild Stash',
 				'Waypoint',
