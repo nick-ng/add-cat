@@ -1,3 +1,5 @@
+import type { Hideout } from '$lib/types';
+
 import { soycat, soycatCentre } from './hideouts/soycat';
 
 export const getDoodadCounts = (hideout: string, lax: boolean = false) => {
@@ -93,4 +95,108 @@ export const replaceWithSoycat = (
 	});
 
 	return originalHideout.replaceAll(/\s+/g, ' ').replace(re, movedSoycat);
+};
+
+export const findCommonDoodads = (hideouts: (Hideout | null)[]): string[] => {
+	const doodadIntersection: { [key: string]: number } = {};
+
+	for (let i = 0; i < hideouts.length; i++) {
+		const hideout = hideouts[i];
+		if (!hideout) {
+			continue;
+		}
+
+		Object.entries(hideout.doodadCounts).forEach(([key, value]) => {
+			if (value > 1) {
+				return;
+			}
+
+			if (!doodadIntersection[key]) {
+				doodadIntersection[key] = 1;
+			} else {
+				doodadIntersection[key] = doodadIntersection[key] + 1;
+			}
+		});
+	}
+
+	const commonDoodads: string[] = [];
+
+	Object.entries(doodadIntersection).forEach(([key, value]) => {
+		if (value < hideouts.length) {
+			return;
+		}
+
+		commonDoodads.push(key);
+	});
+
+	return commonDoodads
+		.filter((a) => a)
+		.sort((a, b) => {
+			if (['Stash', 'Waypoint'].includes(a) && ['Stash', 'Waypoint'].includes(b)) {
+				return a.localeCompare(b);
+			}
+
+			if (['Stash', 'Waypoint'].includes(a)) {
+				return -1;
+			}
+
+			if (['Stash', 'Waypoint'].includes(b)) {
+				return 1;
+			}
+
+			return a.localeCompare(b);
+		});
+};
+
+export const sameOrFirstDoodad = (previousDoodad: string, hideouts: (Hideout | null)[]): string => {
+	const commonDoodads = findCommonDoodads(hideouts);
+
+	if (commonDoodads.includes(previousDoodad)) {
+		previousDoodad;
+	}
+
+	if (!previousDoodad) {
+		if (commonDoodads.includes('Stash')) {
+			return 'Stash';
+		}
+
+		if (commonDoodads.includes('Waypoint')) {
+			return 'Waypoint';
+		}
+
+		return commonDoodads[0];
+	}
+
+	return '';
+};
+
+export const migrateHideout = (
+	chosenDoodad: string,
+	hideout1: Hideout | null,
+	hideout2: Hideout | null
+): string => {
+	if (!hideout1 || !hideout2) {
+		return '';
+	}
+
+	const doodad1 = hideout1.hideoutObject.doodads[chosenDoodad];
+	const doodad2 = hideout2.hideoutObject.doodads[chosenDoodad];
+
+	if (!doodad1 || !doodad2) {
+		return '';
+	}
+
+	let newHideout = moveDecoration(hideout1.hideoutString, doodad1, doodad2);
+
+	// replace hideout names
+	newHideout = newHideout.replace(
+		`"hideout_name": "${hideout1.hideoutObject.hideout_name}"`,
+		`"hideout_name": "${hideout2.hideoutObject.hideout_name}"`
+	);
+	newHideout = newHideout.replace(
+		`"hideout_hash": "${hideout1.hideoutObject.hideout_hash}"`,
+		`"hideout_hash": "${hideout2.hideoutObject.hideout_hash}"`
+	);
+
+	return newHideout;
 };
