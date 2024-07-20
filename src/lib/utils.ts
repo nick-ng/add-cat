@@ -193,9 +193,10 @@ export const migrateHideout = (
 		`"hideout_name": "${hideout1.hideoutObject.hideout_name}"`,
 		`"hideout_name": "${hideout2.hideoutObject.hideout_name}"`
 	);
+
 	newHideout = newHideout.replace(
-		`"hideout_hash": "${hideout1.hideoutObject.hideout_hash}"`,
-		`"hideout_hash": "${hideout2.hideoutObject.hideout_hash}"`
+		`"hideout_hash": ${hideout1.hideoutObject.hideout_hash}`,
+		`"hideout_hash": ${hideout2.hideoutObject.hideout_hash}`
 	);
 
 	return newHideout;

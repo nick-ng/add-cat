@@ -165,7 +165,7 @@
 				<div class="mt-2">
 					<a
 						class="button-default no-underline opaque inline-block"
-						href={`data:text/plain;charset=utf-8,${migrateHideout(oldHideout.hideoutString, oldHideout, newHideout)}`}
+						href={`data:text/plain;charset=utf-8,${migrateHideout(chosenDoodad, oldHideout, newHideout)}`}
 						download={`${newHideout.hideoutName.replaceAll(' ', '-')}_${oldHideout.hideoutName.replaceAll(' ', '-')}_${chosenDoodad}.hideout`.replaceAll(
 							' ',
 							'_'
