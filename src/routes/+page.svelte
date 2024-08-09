@@ -99,8 +99,11 @@
 											)
 												chosenDoodad = '';
 											localStorage.setItem(STORAGE_KEY_CHOSEN_DOODAD_1, '');
-										} catch (_e) {
+										} catch (e) {
 											errors.push(`Error when loading ${file.name}`);
+											if (e instanceof Error) {
+												errors.push(e.message);
+											}
 										}
 									}
 								}
@@ -130,8 +133,11 @@
 
 											chosenDoodad = '';
 											localStorage.setItem(STORAGE_KEY_CHOSEN_DOODAD_1, '');
-										} catch (_e) {
+										} catch (e) {
 											errors.push(`Error when loading ${file.name}`);
+											if (e instanceof Error) {
+												errors.push(e.message);
+											}
 										}
 									}
 								}
