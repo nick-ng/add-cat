@@ -152,7 +152,7 @@ export const sameOrFirstDoodad = (previousDoodad: string, hideouts: (Hideout | n
 	const commonDoodads = findCommonDoodads(hideouts);
 
 	if (commonDoodads.includes(previousDoodad)) {
-		previousDoodad;
+		return previousDoodad;
 	}
 
 	if (!previousDoodad) {

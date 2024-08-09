@@ -75,8 +75,11 @@
 										localStorage.setItem(STORAGE_KEY_TIMESTAMP, uploadedTimestamp.toString(10));
 										localStorage.setItem(STORAGE_KEY_ADJUST_X, adjustX.toString(10));
 										localStorage.setItem(STORAGE_KEY_ADJUST_Y, adjustY.toString(10));
-									} catch (_e) {
+									} catch (e) {
 										errors.push(`Error when loading ${file.name}`);
+										if (e instanceof Error) {
+											errors.push(e.message);
+										}
 									}
 								}
 							}
