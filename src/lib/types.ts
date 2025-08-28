@@ -25,12 +25,13 @@ export const ctrlCSetSchema = z.object({
 	url: z.string().optional(),
 	refreshMs: z.number().default(1000 * 60 * 60 * 24), // 1 day in ms
 	favourites: z.record(z.number(), z.string()),
-	strings: z.record(z.string(),
-				z.object({
-						history: z.array(z.string()),
-						comment: z.string(),
-				})
-		)
+	strings: z.record(
+		z.string(),
+		z.object({
+			history: z.array(z.string()),
+			comment: z.string()
+		})
+	)
 });
 
 export const ctrlCStoreSchema = z.object({
@@ -38,4 +39,4 @@ export const ctrlCStoreSchema = z.object({
 	sets: z.record(z.string(), ctrlCSetSchema)
 });
 
-export type CtrlCStore = z.infer<typeof ctrlCStoreSchema>
+export type CtrlCStore = z.infer<typeof ctrlCStoreSchema>;
