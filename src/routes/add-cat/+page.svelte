@@ -107,7 +107,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							{#each duplicateDoodads as doodad}
+							{#each duplicateDoodads as doodad, i (`${doodad}-${i}`)}
 								<tr class="odd-rows">
 									<td class="px-1 border-default">{doodad[0]}</td>
 									<td class="px-1 border-default text-right">{doodad[1]}</td>
@@ -121,7 +121,7 @@
 				<p>Choose Decoration to Replace</p>
 				<div>
 					<ul class="inline-block">
-						{#each uniqueDoodads as doodad}
+						{#each uniqueDoodads as doodad, i (`${doodad}-${i}`)}
 							<li class="even-rows">
 								<label
 									><input
@@ -149,7 +149,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									{#each duplicateDoodads as doodad}
+									{#each duplicateDoodads as doodad, i (`${doodad}-${i}`)}
 										<tr class="odd-rows">
 											<td class="px-1 border-default">{doodad[0]}</td>
 											<td class="px-1 border-default text-right">{doodad[1]}</td>
