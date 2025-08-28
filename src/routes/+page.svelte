@@ -161,7 +161,7 @@
 						}}
 					>
 						<option>Choose a decoration</option>
-						{#each findCommonDoodads([oldHideout, newHideout]) as doodad}
+						{#each findCommonDoodads([oldHideout, newHideout]) as doodad, i (`${doodad}-${i}`)}
 							<option value={doodad}>{doodad}</option>
 						{/each}
 					</select>
