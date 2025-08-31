@@ -4,5 +4,5 @@ if [[ ! $MY_SESSION ]]; then
 		tmux new-session -d -s addcat
 		tmux new-window
 		tmux send "npm start"
-		tmux attach-session -d -t addcat
 fi
+		tmux attach-session -d -t addcat
