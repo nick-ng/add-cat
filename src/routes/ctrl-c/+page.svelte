@@ -38,7 +38,7 @@
 </script>
 
 <svelte:head>
-	<title>PathOfExileSearchStrings</title>
+	<title>PuxSearchStrings</title>
 </svelte:head>
 
 <div class="container">
