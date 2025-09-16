@@ -42,7 +42,6 @@ if (browser) {
 
 				const ctrlCSet = result.data;
 				prev.groups[ctrlCSet.key] = ctrlCSet;
-				console.log('ctrlCSet', i, ctrlCSet);
 			} catch (e) {
 				console.error('error when parsing set b', key, e);
 			}
@@ -53,7 +52,6 @@ if (browser) {
 }
 
 ctrlCStore.subscribe((nextData) => {
-	console.log(new Date());
 	const updatedGroup = nextData.groups[nextData.updatedGroup];
 	if (!updatedGroup) {
 		return;
