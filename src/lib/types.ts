@@ -21,10 +21,12 @@ export type Hideout = {
 };
 
 export const ctrlCSetSchema = z.object({
+	key: z.string(),
 	name: z.string(),
 	url: z.string().optional(),
 	refreshMs: z.number().default(1000 * 60 * 60 * 24), // 1 day in ms
-	favourites: z.record(z.number(), z.string()),
+	defaultAt: z.number(), // when this set was made the default
+	favourites: z.record(z.string(), z.string()),
 	strings: z.record(
 		z.string(),
 		z.object({
@@ -35,8 +37,8 @@ export const ctrlCSetSchema = z.object({
 });
 
 export const ctrlCStoreSchema = z.object({
-	default: z.string(),
-	sets: z.record(z.string(), ctrlCSetSchema)
+	groups: z.record(z.string(), ctrlCSetSchema),
+	updatedGroup: z.string()
 });
 
 export type CtrlCStore = z.infer<typeof ctrlCStoreSchema>;
