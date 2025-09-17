@@ -1,11 +1,16 @@
 <script lang="ts">
-	import { ctrlCStore, getDefault } from '$lib/stores/ctrl-c';
+	import { ctrlCStore, getDefault, importJsonString } from '$lib/stores/ctrl-c';
 	import { onMount } from 'svelte';
 
 	let selectedGroupKey = $state(getDefault($ctrlCStore));
 	let newString = $state('');
 	let newComment = $state('');
 	let editingString = $state('');
+	let newName = $state('');
+	let editingName = $state(false);
+	let isImporting = $state(false);
+
+	let jsonString = $state('');
 
 	$effect(() => {
 		$ctrlCStore.updatedGroup = selectedGroupKey;
@@ -76,12 +81,53 @@
 		<button
 			type="button"
 			onclick={() => {
-				alert('coming soon');
+				isImporting = !isImporting;
+				jsonString = '';
 			}}>Import</button
 		>
+		<a
+			href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify($ctrlCStore.groups[selectedGroupKey]))}`}
+			>Export</a
+		>
+		{#if isImporting}
+			<div class="importer">
+				Paste Import String
+				<textarea bind:value={jsonString}></textarea>
+				<button
+					type="button"
+					onclick={() => {
+						importJsonString(jsonString);
+						jsonString = '';
+						isImporting = false;
+					}}>Import from String</button
+				>
+			</div>
+		{/if}
 	</div>
 	<div class="main">
-		<h2>{$ctrlCStore.groups[selectedGroupKey].name}</h2>
+		<div class="inline" style="margin: 15px 0 0;">
+			<h2>{$ctrlCStore.groups[selectedGroupKey].name}</h2>
+			<button
+				type="button"
+				onclick={() => {
+					editingName = true;
+					newName = $ctrlCStore.groups[selectedGroupKey].name;
+				}}>Edit</button
+			>
+			{#if editingName}
+				<form
+					onsubmit={(e) => {
+						e.preventDefault();
+
+						$ctrlCStore.groups[selectedGroupKey].name = newName;
+
+						editingName = false;
+					}}
+				>
+					<input bind:value={newName} /> <button>Done</button>
+				</form>
+			{/if}
+		</div>
 		<h3>Favourites</h3>
 		<p>Press <code>CTRL + ALT + #</code> to copy the string to clipboard.</p>
 		<table class="copy-table">
@@ -117,7 +163,7 @@
 			</tbody>
 		</table>
 		<div>
-			<details>
+			<details class="add-string-controls">
 				<summary>Add String</summary>
 				<form
 					onsubmit={(e) => {
@@ -165,7 +211,8 @@
 										$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].history[0];
 								}}>Edit</button
 							>
-							{#if editingString === copyStringKey}<form
+							{#if editingString === copyStringKey}
+								<form
 									onsubmit={(e) => {
 										e.preventDefault();
 
@@ -176,8 +223,9 @@
 									}}
 								>
 									<input bind:value={newString} /> <button>Done</button>
-								</form>{/if}</td
-						>
+								</form>
+							{/if}
+						</td>
 					</tr>
 				{/each}
 			</tbody>
@@ -191,11 +239,29 @@
 		cursor: pointer;
 	}
 
+	input,
+	button,
+	select {
+		color: white;
+		background-color: #002010;
+		font-size: 12pt;
+	}
+
+	a {
+		color: white;
+		background-color: #002010;
+		font-size: 12pt;
+		padding: 1px 4px;
+		text-decoration: none;
+		border: 2px outset #888888;
+	}
+
 	.container {
 		font-family: sans-serif;
 	}
 
 	.controls {
+		position: relative;
 		display: flex;
 		flex-direction: row;
 		gap: 5px;
@@ -205,10 +271,26 @@
 		}
 	}
 
+	.add-string-controls {
+		margin: 5px 0;
+	}
+
 	.copy-table {
 		td {
 			padding: 5px 2px;
 		}
+	}
+
+	.importer {
+		position: absolute;
+		top: calc(100% + 5px);
+		right: 0;
+		padding: 5px;
+		border: 1px solid #888888;
+
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
 	}
 
 	.main {
