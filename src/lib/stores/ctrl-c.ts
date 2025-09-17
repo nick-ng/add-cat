@@ -22,33 +22,36 @@ export const ctrlCStore = writable<CtrlCStore>({
 	updatedGroup: ''
 });
 
-if (browser) {
-	const ctrlCSetKeys = Object.keys(localStorage).filter((k) => k.startsWith(STORE_PREFIX));
-	ctrlCStore.update((prev) => {
-		for (let i = 0; i < ctrlCSetKeys.length; i++) {
-			const key = ctrlCSetKeys[i];
-			const setString = localStorage.getItem(key);
-			if (!setString) {
-				continue;
-			}
+export const importJsonString = (jsonString: string | null) => {
+	if (!jsonString) {
+		return;
+	}
 
-			try {
-				const unknown = JSON.parse(setString);
-				const result = ctrlCSetSchema.safeParse(unknown);
-				if (result.error) {
-					console.error('error when parsing set a', key, result.data);
-					continue;
-				}
-
-				const ctrlCSet = result.data;
-				prev.groups[ctrlCSet.key] = ctrlCSet;
-			} catch (e) {
-				console.error('error when parsing set b', key, e);
-			}
+	try {
+		const unknown = JSON.parse(jsonString);
+		const result = ctrlCSetSchema.safeParse(unknown);
+		if (result.error) {
+			console.error('group has wrong schema');
+			return;
 		}
 
-		return prev;
-	});
+		const ctrlCSet = result.data;
+		ctrlCStore.update((prev) => {
+			prev.groups[ctrlCSet.key] = ctrlCSet;
+			return prev;
+		});
+	} catch (e) {
+		console.error('error when parsing group', e);
+	}
+};
+
+if (browser) {
+	const ctrlCSetKeys = Object.keys(localStorage).filter((k) => k.startsWith(STORE_PREFIX));
+	for (let i = 0; i < ctrlCSetKeys.length; i++) {
+		const key = ctrlCSetKeys[i];
+		const setString = localStorage.getItem(key);
+		importJsonString(setString);
+	}
 }
 
 ctrlCStore.subscribe((nextData) => {
