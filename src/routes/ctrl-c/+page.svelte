@@ -6,6 +6,7 @@
 	let newString = $state('');
 	let newComment = $state('');
 	let editingString = $state('');
+	let editingComment = $state('');
 	let newName = $state('');
 	let editingName = $state(false);
 	let isImporting = $state(false);
@@ -86,6 +87,7 @@
 			}}>Import</button
 		>
 		<a
+			class="like-button"
 			href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify($ctrlCStore.groups[selectedGroupKey]))}`}
 			>Export</a
 		>
@@ -103,6 +105,11 @@
 				>
 			</div>
 		{/if}
+	</div>
+	<div>
+		<ul>
+			<li><a href="https://poe.re" target="_blank">poe.re</a></li>
+		</ul>
 	</div>
 	<div class="main">
 		<div class="inline" style="margin: 15px 0 0;">
@@ -128,40 +135,6 @@
 				</form>
 			{/if}
 		</div>
-		<h3>Favourites</h3>
-		<p>Press <code>CTRL + ALT + #</code> to copy the string to clipboard.</p>
-		<table class="copy-table">
-			<tbody>
-				{#each [1, 2, 3, 4, 5] as index (index)}
-					<tr>
-						<td style="text-align:right;">{index}</td>
-						<td
-							><select bind:value={$ctrlCStore.groups[selectedGroupKey].favourites[`${index}`]}>
-								<option value="">Choose a string</option>
-								{#each Object.keys($ctrlCStore.groups[selectedGroupKey].strings) as copyStringKey (copyStringKey)}
-									<option value={copyStringKey}
-										>{$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey]
-											.history[0]}</option
-									>
-								{/each}</select
-							>
-						</td>
-						<td style="text-align:right;padding-left:8px;">{index + 5}</td>
-						<td
-							><select bind:value={$ctrlCStore.groups[selectedGroupKey].favourites[`${index + 5}`]}>
-								<option value="">Choose a string</option>
-								{#each Object.keys($ctrlCStore.groups[selectedGroupKey].strings) as copyStringKey (copyStringKey)}
-									<option value={copyStringKey}
-										>{$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey]
-											.history[0]}</option
-									>
-								{/each}</select
-							>
-						</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
 		<div>
 			<details class="add-string-controls">
 				<summary>Add String</summary>
@@ -178,8 +151,10 @@
 						newString = '';
 						newComment = '';
 						editingString = '';
+						editingComment = '';
 					}}
 				>
+					<label>Comment <input type="text" bind:value={newComment} /></label>
 					<label>String <input type="text" bind:value={newString} /></label>
 					<button type="submit">Add</button>
 				</form>
@@ -191,6 +166,7 @@
 					<tr>
 						<td
 							><button
+								class="copy-button"
 								type="button"
 								onclick={() => {
 									if (navigator?.clipboard) {
@@ -198,12 +174,12 @@
 											$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].history[0]
 										);
 									}
-								}}>Copy</button
+								}}>{$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].comment}</button
 							></td
 						>
 						<td>{$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].history[0]}</td>
-						<td class="inline"
-							><button
+						<td class="inline">
+							<button
 								type="button"
 								onclick={() => {
 									editingString = copyStringKey;
@@ -222,7 +198,50 @@
 										editingString = '';
 									}}
 								>
-									<input bind:value={newString} /> <button>Done</button>
+									<input bind:value={newString} />
+									<button>Done</button>
+									<button
+										type="button"
+										onclick={() => {
+											editingString = '';
+											newString = '';
+										}}
+									>
+										Cancel
+									</button>
+								</form>
+							{/if}
+						</td>
+						<td class="inline">
+							<button
+								type="button"
+								onclick={() => {
+									editingComment = copyStringKey;
+									newComment = $ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].comment;
+								}}>Edit Comment</button
+							>
+							{#if editingComment === copyStringKey}
+								<form
+									onsubmit={(e) => {
+										e.preventDefault();
+
+										$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].comment =
+											newComment;
+
+										editingComment = '';
+									}}
+								>
+									<input bind:value={newString} />
+									<button>Done</button>
+									<button
+										type="button"
+										onclick={() => {
+											editingComment = '';
+											newComment = '';
+										}}
+									>
+										Cancel
+									</button>
 								</form>
 							{/if}
 						</td>
@@ -248,6 +267,14 @@
 	}
 
 	a {
+		color: #5050ff;
+	}
+
+	a:visited {
+		color: #aa50aa;
+	}
+
+	.like-button {
 		color: white;
 		background-color: #002010;
 		font-size: 12pt;
@@ -273,12 +300,20 @@
 
 	.add-string-controls {
 		margin: 5px 0;
+
+		label {
+			display: block;
+		}
 	}
 
 	.copy-table {
 		td {
 			padding: 5px 2px;
 		}
+	}
+
+	.copy-button {
+		padding: 8px;
 	}
 
 	.importer {
