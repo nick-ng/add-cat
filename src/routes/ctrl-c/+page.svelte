@@ -174,7 +174,9 @@
 											$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].history[0]
 										);
 									}
-								}}>{$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].comment}</button
+								}}
+								>{$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].comment ||
+									'Copy'}</button
 							></td
 						>
 						<td>{$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].history[0]}</td>
@@ -231,7 +233,7 @@
 										editingComment = '';
 									}}
 								>
-									<input bind:value={newString} />
+									<input bind:value={newComment} />
 									<button>Done</button>
 									<button
 										type="button"
