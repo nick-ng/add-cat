@@ -14,7 +14,6 @@
 			class="rounded border border-gray-600 px-2 py-0 dark:border-gray-300 cannot-hover:py-2"
 			href="/add-cat">Add Cat</a
 		>
-		<div>{JSON.stringify(page.route, null, 2)}</div>
 	</div>
 {/if}
 <slot />
