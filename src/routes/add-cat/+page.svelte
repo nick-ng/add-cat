@@ -52,7 +52,9 @@
 	<div class="flex flex-row justify-center mt-2">
 		<div class="basis-prose">
 			<div>
-				<label class="button-default inline-block cursor-pointer relative">
+				<label
+					class="rounded border border-gray-600 px-2 py-0 dark:border-gray-300 cannot-hover:py-2 inline-block cursor-pointer relative"
+				>
 					Upload Hideout
 					<input
 						class="w-0 opacity-0 text-sm text-left block absolute top-0 left-0"
@@ -251,7 +253,7 @@
 			{#if chosenDoodad && uniqueDoodads.length > 0}
 				<div>
 					<a
-						class="button-default no-underline opaque inline-block"
+						class="rounded border border-gray-600 px-2 py-0 dark:border-gray-300 cannot-hover:py-2 no-underline opaque inline-block"
 						href={`data:text/plain;charset=utf-8,${hideoutWithCat}`}
 						download={`with-cat_x${adjustX}_y${adjustY}.hideout`}>Download (Right-Click, Save As)</a
 					>

@@ -77,7 +77,9 @@
 		<div class="basis-prose">
 			<div class="flex flex-row gap-2">
 				<div class="flex flex-col">
-					<label class="button-default inline-block cursor-pointer relative">
+					<label
+						class="rounded border border-gray-600 px-2 py-0 dark:border-gray-300 cannot-hover:py-2 inline-block cursor-pointer relative"
+					>
 						Upload Old Hideout
 						<input
 							class="w-0 opacity-0 text-sm text-left block absolute top-0 left-0"
@@ -115,7 +117,9 @@
 					{/if}
 				</div>
 				<div class="inline-block">
-					<label class="button-default inline-block cursor-pointer relative">
+					<label
+						class="rounded border border-gray-600 px-2 py-0 dark:border-gray-300 cannot-hover:py-2 inline-block cursor-pointer relative"
+					>
 						Upload New Hideout
 						<input
 							class="w-0 opacity-0 text-sm text-left block absolute top-0 left-0"
@@ -170,7 +174,7 @@
 			{#if oldHideout && newHideout && findCommonDoodads( [oldHideout, newHideout] ).includes(chosenDoodad)}
 				<div class="mt-2">
 					<a
-						class="button-default no-underline opaque inline-block"
+						class="rounded border border-gray-600 px-2 py-0 dark:border-gray-300 cannot-hover:py-2 no-underline opaque inline-block"
 						href={`data:text/plain;charset=utf-8,${migrateHideout(chosenDoodad, oldHideout, newHideout)}`}
 						download={`${newHideout.hideoutName.replaceAll(' ', '-')}_${oldHideout.hideoutName.replaceAll(' ', '-')}_${chosenDoodad}.hideout`.replaceAll(
 							' ',
