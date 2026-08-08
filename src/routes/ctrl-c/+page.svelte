@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import localforage from 'localforage';
 	import { ctrlCStore, getDefault, importJsonString } from '$lib/stores/ctrl-c';
 	import { requestPersistence } from '$lib/utils';
 
@@ -265,6 +264,24 @@
 									</button>
 								</form>
 							{/if}
+						</td>
+						<td>
+							<button
+								type="button"
+								onclick={async () => {
+									if (
+										!confirm(
+											`Really delete "${$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].comment}"?`
+										)
+									) {
+										return;
+									}
+
+									const tempStrings = $ctrlCStore.groups[selectedGroupKey].strings;
+									delete tempStrings[copyStringKey];
+									$ctrlCStore.groups[selectedGroupKey].strings = tempStrings;
+								}}>Delete</button
+							>
 						</td>
 					</tr>
 				{/each}
