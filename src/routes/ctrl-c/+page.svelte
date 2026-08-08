@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { ctrlCStore, getDefault, importJsonString } from '$lib/stores/ctrl-c';
 	import { onMount } from 'svelte';
+	import localforage from 'localforage';
+	import { ctrlCStore, getDefault, importJsonString } from '$lib/stores/ctrl-c';
+	import { requestPersistence } from '$lib/utils';
 
 	let selectedGroupKey = $state(getDefault($ctrlCStore));
 	let newString = $state('');
@@ -123,8 +125,10 @@
 			>
 			{#if editingName}
 				<form
-					onsubmit={(e) => {
+					onsubmit={async (e) => {
 						e.preventDefault();
+
+						await requestPersistence();
 
 						$ctrlCStore.groups[selectedGroupKey].name = newName;
 
@@ -139,8 +143,10 @@
 			<details class="add-string-controls">
 				<summary>Add String</summary>
 				<form
-					onsubmit={(e) => {
+					onsubmit={async (e) => {
 						e.preventDefault();
+
+						await requestPersistence();
 
 						const stringKey = `c${Date.now()}`;
 						$ctrlCStore.groups[selectedGroupKey].strings[stringKey] = {
@@ -162,7 +168,9 @@
 		</div>
 		<table class="copy-table">
 			<tbody>
-				{#each Object.keys($ctrlCStore.groups[selectedGroupKey].strings) as copyStringKey (copyStringKey)}
+				{#each Object.keys($ctrlCStore.groups[selectedGroupKey].strings).sort((a, b) => {
+					return $ctrlCStore.groups[selectedGroupKey].strings[a].comment.localeCompare($ctrlCStore.groups[selectedGroupKey].strings[b].comment);
+				}) as copyStringKey (copyStringKey)}
 					<tr>
 						<td
 							><button
@@ -179,20 +187,14 @@
 									'Copy'}</button
 							></td
 						>
-						<td>{$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].history[0]}</td>
-						<td class="inline">
-							<button
-								type="button"
-								onclick={() => {
-									editingString = copyStringKey;
-									newString =
-										$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].history[0];
-								}}>Edit</button
-							>
+						<td class="copy-string-cell">
 							{#if editingString === copyStringKey}
 								<form
-									onsubmit={(e) => {
+									class="copy-string-contents"
+									onsubmit={async (e) => {
 										e.preventDefault();
+
+										await requestPersistence();
 
 										$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].history[0] =
 											newString;
@@ -200,7 +202,7 @@
 										editingString = '';
 									}}
 								>
-									<input bind:value={newString} />
+									<input style="flex-grow: 1;flex-shrink: 1;" bind:value={newString} />
 									<button>Done</button>
 									<button
 										type="button"
@@ -212,20 +214,37 @@
 										Cancel
 									</button>
 								</form>
+							{:else}
+								<div class="copy-string-contents">
+									<div class="copy-string">
+										{$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].history[0]}
+									</div>
+									<button
+										type="button"
+										onclick={() => {
+											editingString = copyStringKey;
+											newString =
+												$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].history[0];
+										}}>Edit</button
+									>
+								</div>
 							{/if}
 						</td>
 						<td class="inline">
 							<button
 								type="button"
-								onclick={() => {
+								onclick={async () => {
+									await requestPersistence();
 									editingComment = copyStringKey;
 									newComment = $ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].comment;
 								}}>Edit Comment</button
 							>
 							{#if editingComment === copyStringKey}
 								<form
-									onsubmit={(e) => {
+									onsubmit={async (e) => {
 										e.preventDefault();
+
+										await requestPersistence();
 
 										$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].comment =
 											newComment;
@@ -316,6 +335,22 @@
 
 	.copy-button {
 		padding: 8px;
+		width: 100%;
+	}
+
+	.copy-string {
+		white-space: nowrap;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+		flex-shrink: 1;
+		flex-grow: 1;
+	}
+
+	.copy-string-contents {
+		display: flex;
+		flex-direction: row;
+		gap: 5px;
+		width: 500px;
 	}
 
 	.importer {

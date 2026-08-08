@@ -201,3 +201,15 @@ export const migrateHideout = (
 
 	return newHideout;
 };
+
+export async function requestPersistence() {
+	if (!navigator.storage?.persist) {
+		return false; // unsupported
+	}
+
+	if (await navigator.storage.persisted()) {
+		return true; // already granted — don't re-ask
+	}
+
+	return navigator.storage.persist(); // may prompt
+}

@@ -1,6 +1,7 @@
 import type { CtrlCStore } from '$lib/types';
 
 import { writable } from 'svelte/store';
+import localforage from 'localforage';
 import { browser } from '$app/environment';
 import { ctrlCSetSchema } from '$lib/types';
 
@@ -45,24 +46,32 @@ export const importJsonString = (jsonString: string | null) => {
 	}
 };
 
-if (browser) {
-	const ctrlCSetKeys = Object.keys(localStorage).filter((k) => k.startsWith(STORE_PREFIX));
-	for (let i = 0; i < ctrlCSetKeys.length; i++) {
-		const key = ctrlCSetKeys[i];
-		const setString = localStorage.getItem(key);
-		importJsonString(setString);
-	}
+async function firstLoad() {
+	const allKeys = await localforage.keys();
+	const ctrlCSetKeys = allKeys.filter((k) => k.startsWith(STORE_PREFIX));
+	await Promise.all(
+		ctrlCSetKeys.map(async (key) => {
+			const setString = await localforage.getItem(key);
+			if (typeof setString === 'string') {
+				importJsonString(setString);
+			}
+		})
+	);
+
+	ctrlCStore.subscribe((nextData) => {
+		const updatedGroup = nextData.groups[nextData.updatedGroup];
+		if (!updatedGroup) {
+			return;
+		}
+
+		const storeKey = `${STORE_PREFIX}${updatedGroup.key}`;
+		localforage.setItem(storeKey, JSON.stringify(updatedGroup));
+	});
 }
 
-ctrlCStore.subscribe((nextData) => {
-	const updatedGroup = nextData.groups[nextData.updatedGroup];
-	if (!updatedGroup) {
-		return;
-	}
-
-	const storeKey = `${STORE_PREFIX}${updatedGroup.key}`;
-	localStorage.setItem(storeKey, JSON.stringify(updatedGroup));
-});
+if (browser) {
+	firstLoad();
+}
 
 export const getDefault = (store: CtrlCStore) => {
 	let d = '';
