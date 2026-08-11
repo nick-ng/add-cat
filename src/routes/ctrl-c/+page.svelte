@@ -48,7 +48,7 @@
 	<title>PuxSearchStrings</title>
 </svelte:head>
 
-<div class="container">
+<div class="container m-2">
 	<div class="controls">
 		<select bind:value={selectedGroupKey}>
 			{#each Object.values($ctrlCStore.groups) as ctrlCSet (ctrlCSet.key)}
@@ -113,9 +113,10 @@
 		</ul>
 	</div>
 	<div class="main">
-		<div class="inline" style="margin: 15px 0 0;">
-			<h2>{$ctrlCStore.groups[selectedGroupKey].name}</h2>
+		<div style="margin: 15px 0 0;">
+			<h2 class="inline-block">{$ctrlCStore.groups[selectedGroupKey].name}</h2>
 			<button
+				class="inline-block"
 				type="button"
 				onclick={() => {
 					editingName = true;
@@ -124,6 +125,7 @@
 			>
 			{#if editingName}
 				<form
+					class="inline-block"
 					onsubmit={async (e) => {
 						e.preventDefault();
 
@@ -134,7 +136,7 @@
 						editingName = false;
 					}}
 				>
-					<input bind:value={newName} /> <button>Done</button>
+					<input class="button-default" bind:value={newName} /> <button>Done</button>
 				</form>
 			{/if}
 		</div>
@@ -201,7 +203,7 @@
 										editingString = '';
 									}}
 								>
-									<input style="flex-grow: 1;flex-shrink: 1;" bind:value={newString} />
+									<input class="grow button-default" bind:value={newString} />
 									<button>Done</button>
 									<button
 										type="button"
@@ -229,17 +231,20 @@
 								</div>
 							{/if}
 						</td>
-						<td class="inline">
+						<td>
 							<button
 								type="button"
 								onclick={async () => {
 									await requestPersistence();
 									editingComment = copyStringKey;
 									newComment = $ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].comment;
-								}}>Edit Comment</button
+								}}
 							>
+								Edit Comment
+							</button>
 							{#if editingComment === copyStringKey}
 								<form
+									class="inline"
 									onsubmit={async (e) => {
 										e.preventDefault();
 
@@ -251,7 +256,7 @@
 										editingComment = '';
 									}}
 								>
-									<input bind:value={newComment} />
+									<input class="button-default" bind:value={newComment} />
 									<button>Done</button>
 									<button
 										type="button"
@@ -386,9 +391,5 @@
 		h2 {
 			text-transform: capitalize;
 		}
-	}
-
-	.inline * {
-		display: inline;
 	}
 </style>

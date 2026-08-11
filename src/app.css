@@ -54,6 +54,7 @@
 		@apply mt-0.5;
 	}
 
+	.markdown tbody tr,
 	.odd-rows {
 		@apply odd:bg-gray-200 odd:dark:bg-gray-700;
 	}
@@ -75,17 +76,15 @@
 		@apply rounded border border-gray-600 px-2 py-0 dark:border-gray-300 cannot-hover:py-2;
 	}
 
+	.markdown td,
+	.markdown th,
 	.border-default {
 		@apply border border-gray-600 dark:border-gray-300;
 	}
 
 	.markdown td,
 	.markdown th {
-		@apply border-default px-2;
-	}
-
-	.markdown tbody tr {
-		@apply odd-rows;
+		@apply px-2;
 	}
 
 	.markdown hr {
