@@ -48,9 +48,9 @@
 	<title>PuxSearchStrings</title>
 </svelte:head>
 
-<div class="container m-2">
-	<div class="controls">
-		<select bind:value={selectedGroupKey}>
+<div class="m-2">
+	<div class="relative flex flex-row gap-1">
+		<select class="capitalize button-default" bind:value={selectedGroupKey}>
 			{#each Object.values($ctrlCStore.groups) as ctrlCSet (ctrlCSet.key)}
 				<option value={ctrlCSet.key}>{ctrlCSet.name}</option>
 			{/each}
@@ -88,7 +88,7 @@
 			}}>Import</button
 		>
 		<a
-			class="like-button"
+			class="button-default no-underline text-white"
 			href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify($ctrlCStore.groups[selectedGroupKey]))}`}
 			>Export</a
 		>
@@ -112,11 +112,10 @@
 			<li><a href="https://poe.re" target="_blank">poe.re</a></li>
 		</ul>
 	</div>
-	<div class="main">
-		<div style="margin: 15px 0 0;">
-			<h2 class="inline-block">{$ctrlCStore.groups[selectedGroupKey].name}</h2>
+	<div>
+		<div class="flex flex-row items-center my-2 gap-2">
+			<h2 class="capitalize">{$ctrlCStore.groups[selectedGroupKey].name}</h2>
 			<button
-				class="inline-block"
 				type="button"
 				onclick={() => {
 					editingName = true;
@@ -141,7 +140,7 @@
 			{/if}
 		</div>
 		<div>
-			<details class="add-string-controls">
+			<details class="my-1">
 				<summary>Add String</summary>
 				<form
 					onsubmit={async (e) => {
@@ -161,13 +160,14 @@
 						editingComment = '';
 					}}
 				>
-					<label>Comment <input type="text" bind:value={newComment} /></label>
-					<label>String <input type="text" bind:value={newString} /></label>
+					<label>Comment <input class="button-default" type="text" bind:value={newComment} /></label
+					>
+					<label>String <input class="button-default" type="text" bind:value={newString} /></label>
 					<button type="submit">Add</button>
 				</form>
 			</details>
 		</div>
-		<table class="copy-table">
+		<table class="border-separate border-spacing-y-2 border-spacing-x-1">
 			<tbody>
 				{#each Object.keys($ctrlCStore.groups[selectedGroupKey].strings).sort((a, b) => {
 					return $ctrlCStore.groups[selectedGroupKey].strings[a].comment.localeCompare($ctrlCStore.groups[selectedGroupKey].strings[b].comment);
@@ -175,7 +175,7 @@
 					<tr>
 						<td
 							><button
-								class="copy-button"
+								class="w-full p-2"
 								type="button"
 								onclick={() => {
 									if (navigator?.clipboard) {
@@ -188,10 +188,10 @@
 									'Copy'}</button
 							></td
 						>
-						<td class="copy-string-cell">
+						<td>
 							{#if editingString === copyStringKey}
 								<form
-									class="copy-string-contents"
+									class="w-[500px] flex flex-row gap-1"
 									onsubmit={async (e) => {
 										e.preventDefault();
 
@@ -203,7 +203,11 @@
 										editingString = '';
 									}}
 								>
-									<input class="grow button-default" bind:value={newString} />
+									<input
+										class="grow button-default"
+										style="flex-grow: 1;flex-shrink: 1;"
+										bind:value={newString}
+									/>
 									<button>Done</button>
 									<button
 										type="button"
@@ -216,7 +220,7 @@
 									</button>
 								</form>
 							{:else}
-								<div class="copy-string-contents">
+								<div class="flex flex-row w-[500px] gap-1">
 									<div class="copy-string">
 										{$ctrlCStore.groups[selectedGroupKey].strings[copyStringKey].history[0]}
 									</div>
@@ -296,68 +300,11 @@
 </div>
 
 <style>
-	summary,
-	button {
-		cursor: pointer;
-	}
-
 	input,
 	button,
 	select {
 		color: white;
 		background-color: #002010;
-		font-size: 12pt;
-	}
-
-	a {
-		color: #5050ff;
-	}
-
-	a:visited {
-		color: #aa50aa;
-	}
-
-	.like-button {
-		color: white;
-		background-color: #002010;
-		font-size: 12pt;
-		padding: 1px 4px;
-		text-decoration: none;
-		border: 2px outset #888888;
-	}
-
-	.container {
-		font-family: sans-serif;
-	}
-
-	.controls {
-		position: relative;
-		display: flex;
-		flex-direction: row;
-		gap: 5px;
-
-		select {
-			text-transform: capitalize;
-		}
-	}
-
-	.add-string-controls {
-		margin: 5px 0;
-
-		label {
-			display: block;
-		}
-	}
-
-	.copy-table {
-		td {
-			padding: 5px 2px;
-		}
-	}
-
-	.copy-button {
-		padding: 8px;
-		width: 100%;
 	}
 
 	.copy-string {
@@ -366,13 +313,6 @@
 		text-overflow: ellipsis;
 		flex-shrink: 1;
 		flex-grow: 1;
-	}
-
-	.copy-string-contents {
-		display: flex;
-		flex-direction: row;
-		gap: 5px;
-		width: 500px;
 	}
 
 	.importer {
@@ -385,11 +325,5 @@
 		display: flex;
 		flex-direction: column;
 		gap: 5px;
-	}
-
-	.main {
-		h2 {
-			text-transform: capitalize;
-		}
 	}
 </style>
