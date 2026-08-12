@@ -70,7 +70,7 @@
 	<title>Migrate Hideout</title>
 </svelte:head>
 
-<div class="max-w-[130ch] mx-auto">
+<div class="max-w-prose2 mx-auto">
 	<h1 class="mt-1">Migrate Hideout</h1>
 	<p>Move all the decorations from one hideout to another.</p>
 	<div class="flex flex-row justify-center mt-2">
