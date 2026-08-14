@@ -1,13 +1,7 @@
 <script lang="ts">
-	import {
-		parseItemString,
-		importItems,
-		importStats,
-		generateSearchUrl
-	} from '$lib/awakened-poe-utils';
-	let itemString = $state('');
+	import { importItems, importStats } from '$lib/awakened-poe-utils';
 
-	let item = $derived(parseItemString(itemString));
+	import ItemParser from './item-parser.svelte';
 
 	let statsNdjson = $state<FileList | null>(null);
 	let itemsNdjson = $state<FileList | null>(null);
@@ -19,7 +13,7 @@
 
 <div class="mx-2">
 	<div class="my-2 flex flex-row items-start">
-		<h2>Hello</h2>
+		<h2>Item Parser</h2>
 		<div class="grow"></div>
 		<div class="relative">
 			<div class="absolute right-0 top-0">
@@ -85,36 +79,8 @@
 		>. You should use it instead of this since it provides a much better experience.
 	</p>
 	<div class="flex flex-row gap-2">
-		<div>
-			<p>Paste item text here</p>
-			<textarea class="bg-color-transparent block mb-2" bind:value={itemString}></textarea>
-			{#if item}
-				{#if typeof item?.properties.dps === 'number'}
-					<div>
-						<div>
-							DPS: {item.properties.dps}
-						</div>
-						<div>
-							pDPS: {item.properties.pdps}
-						</div>
-					</div>
-				{/if}
-				<div>
-					{#await generateSearchUrl(item, 'Allflame')}
-						<span>Loading...</span>
-					{:then searchUrl}
-						<a href={searchUrl} target="_blank">Search</a>
-					{:catch error}
-						<span>Couldn't get search url because {error}</span>
-					{/await}
-					<details class="my-2">
-						<summary>Debug</summary>
-						<pre>
-					{JSON.stringify(item, null, 2)}
-					</pre>
-					</details>
-				</div>
-			{/if}
-		</div>
+		<ItemParser />
+		<ItemParser />
+		<ItemParser />
 	</div>
 </div>
