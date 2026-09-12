@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { parseItemString, generateSearchUrl } from '$lib/awakened-poe-utils';
+	import { parseItemString } from '$lib/awakened-poe-utils';
 	let itemString = $state('');
 
 	let item = $derived(parseItemString(itemString));
@@ -7,7 +7,7 @@
 
 <div>
 	<p>Paste item text here</p>
-	<textarea class="bg-color-transparent block mb-2" bind:value={itemString}></textarea>
+	<textarea class="bg-color-transparent block mb-2" rows="15" bind:value={itemString}></textarea>
 	{#if item}
 		<div>
 			<div class="font-bold">
@@ -26,13 +26,6 @@
 			{/if}
 		</div>
 		<div>
-			{#await generateSearchUrl(item, 'Allflame')}
-				<span>Loading...</span>
-			{:then searchUrl}
-				<a href={searchUrl} target="_blank">Search</a>
-			{:catch error}
-				<span>Couldn't get search url because {error}</span>
-			{/await}
 			<details class="my-2">
 				<summary>Debug</summary>
 				<pre>
