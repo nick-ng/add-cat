@@ -13,6 +13,7 @@ export type PageProps = {
 	data: PageLoad;
 };
 
+// @todo(nick-ng): move this to a onMount in the +page.svelte file
 export const load = async (): Promise<PageLoad> => {
 	try {
 		const sessionsString = await localforage.getItem(SESSIONS_STORE_KEY);
