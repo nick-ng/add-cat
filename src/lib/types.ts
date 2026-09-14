@@ -42,3 +42,33 @@ export const ctrlCStoreSchema = z.object({
 });
 
 export type CtrlCStore = z.infer<typeof ctrlCStoreSchema>;
+
+export const delveRowSchema = z.object({
+	goal: z.string(),
+	startingSulfite: z.number(),
+	startingAzurite: z.number(),
+	startingDepth: z.number(),
+	startingFossilTabC: z.number(),
+	startingTimestampMs: z.number(),
+	endingSulfite: z.number(),
+	endingAzurite: z.number(),
+	endingDepth: z.number(),
+	endingFossilTabC: z.number(),
+	endingTimestampMs: z.number()
+});
+
+export const delveRowsSchema = z.array(delveRowSchema);
+
+export type DelveRow = z.infer<typeof delveRowSchema>;
+
+export const delveSessionsSchema = z.object({
+	currentSession: z.string().nullable(),
+	sessions: z.array(
+		z.object({
+			id: z.string(),
+			name: z.string()
+		})
+	)
+});
+
+export type DelveSessions = z.infer<typeof delveSessionsSchema>;

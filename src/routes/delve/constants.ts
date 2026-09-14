@@ -1,0 +1,2 @@
+export const STORE_PREFIX = 'PUX_DELVE_SESSION_';
+export const SESSIONS_STORE_KEY = 'PUX_DELVE_SESSIONS';

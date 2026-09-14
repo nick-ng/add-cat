@@ -8,6 +8,7 @@
 	</div>
 	<div class="flex flex-col mx-2 my-2 gap-2">
 		<a class="button-default text-center no-underline text-blue-300" href="/ctrl-c"> RegExp </a>
+		<a class="button-default text-center no-underline text-blue-300" href="/delve"> Delve </a>
 		<a class="button-default text-center no-underline text-blue-300" href="/asleep-poe-trade">
 			Item Parser
 		</a>
