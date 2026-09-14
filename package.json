@@ -10,7 +10,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write .",
+		"format": "prettier --write --list-different .",
+		"format:changed": "git diff --name-only main | xargs prettier --write --list-different",
 		"l": "npm run format && npm run lint && npm run check"
 	},
 	"devDependencies": {
