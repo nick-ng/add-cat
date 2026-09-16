@@ -44,13 +44,15 @@ export const ctrlCStoreSchema = z.object({
 export type CtrlCStore = z.infer<typeof ctrlCStoreSchema>;
 
 export const delveRowSchema = z.object({
+	id: z.string(),
 	goal: z.string(),
-	startingSulfite: z.number(),
+	azuritePerC: z.number(),
+	startingSulphite: z.number(),
 	startingAzurite: z.number(),
 	startingDepth: z.number(),
 	startingFossilTabC: z.number(),
 	startingTimestampMs: z.number(),
-	endingSulfite: z.number(),
+	endingSulphite: z.number(),
 	endingAzurite: z.number(),
 	endingDepth: z.number(),
 	endingFossilTabC: z.number(),

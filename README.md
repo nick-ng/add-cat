@@ -46,3 +46,4 @@ You can preview the production build with `npm run preview`.
 
 ### ToDo Comments
 
+- src/routes/delve/+page.ts:16: @todo(nick-ng): move this to a onMount in the +page.svelte file
