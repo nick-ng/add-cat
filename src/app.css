@@ -18,12 +18,12 @@
 	}
 
 	.opaque {
-		@apply bg-white dark:bg-gray-800;
+		@apply bg-gray-800;
 	}
 
 	select,
 	textarea {
-		@apply rounded border border-gray-300 px-0.5 dark:border-gray-500;
+		@apply rounded border border-gray-500 px-0.5;
 	}
 
 	a {
@@ -56,15 +56,15 @@
 
 	.markdown tbody tr,
 	.odd-rows {
-		@apply odd:bg-gray-200 odd:dark:bg-gray-700;
+		@apply odd:bg-gray-700;
 	}
 
 	.even-rows {
-		@apply even:bg-gray-200 even:dark:bg-gray-700;
+		@apply even:bg-gray-700;
 	}
 
 	.odd-bg {
-		@apply bg-gray-200 dark:bg-gray-700;
+		@apply bg-gray-700;
 	}
 
 	button:disabled {
@@ -73,13 +73,13 @@
 
 	button,
 	.button-default {
-		@apply rounded border border-gray-600 px-2 py-0 dark:border-gray-300 cannot-hover:py-2 cursor-pointer;
+		@apply rounded border border-gray-500 px-2 py-0 cursor-pointer;
 	}
 
 	.markdown td,
 	.markdown th,
 	.border-default {
-		@apply border border-gray-600 dark:border-gray-300;
+		@apply border border-gray-500;
 	}
 
 	.markdown td,
