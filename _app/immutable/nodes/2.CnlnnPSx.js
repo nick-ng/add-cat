@@ -1,0 +1,1 @@
+import"../chunks/Bgc2dk13.js";import"../chunks/VYmj6jfw.js";import{f as t,a as m}from"../chunks/DBQXiLlQ.js";var p=t('<div class="max-w-[80ch] mx-auto"><h1 class="mt-1">Path of Exile Stuff</h1> <p>Hello</p></div>');function s(o){var a=p();m(o,a)}export{s as component};
